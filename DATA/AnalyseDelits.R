@@ -1,12 +1,12 @@
-# Chargement des données
+
 library(tidyverse)
 
 delits <- read_csv2("delitDep.csv", na = "NA", locale = locale(encoding = "latin1"))
 
-# Création des nouvelles catégories agrégées
+
 newdelit <- delits %>%
   mutate(
-    Dpt = Dpt,  # Conservation de la colonne Département
+    Dpt = Dpt,
     
     'Atteintes aux personnes' = rowSums(across(
       contains("Homicides") |
@@ -87,7 +87,7 @@ newdelit <- delits %>%
     ), na.rm = TRUE)
   )
 
-# Sélection des colonnes pertinentes
+
 newdelit <- newdelit %>% 
   select(
     Dpt,
@@ -126,7 +126,8 @@ delits_wide
 
 library(ggplot2)
 
-# Total par catégorie pour tous les départements
+# Répartition totale des délits par catégorie
+
 delits_long %>%
   group_by(categorie) %>%            #data
   summarise(total = sum(nombre)) %>% #data
@@ -136,6 +137,10 @@ delits_long %>%
   
   geom_col() + #layers
 
+  scale_x_log10(
+    breaks = c(1000, 10000, 50000, 250000, 1000000),
+    labels = c("1k", "10k", "50k", "250k", "1M")) + # scales
+
   labs(title = "Répartition des délits en France",
        x = "Catégorie de délit",
        y = "Nombre de délits") + #labels
@@ -144,10 +149,31 @@ delits_long %>%
   theme(legend.position = "none") #theme
 
 
+#Plot du top 10 des départements les + criminels
+
+delits_total_dpt <- newdelit %>%
+  mutate(Total = rowSums(select(., -Dpt))) %>%
+  arrange(desc(Total)) %>%
+  slice(1:10)
+
+delits_total_dpt %>%
+  ggplot() +                                        #data
+  aes(x=Total, y=reorder(Dpt, Total),fill = Dpt) + #data
+  
+  geom_col() + #layers
+  
+  scale_x_continuous(labels = function(x) format(x, big.mark = " ", scientific = FALSE)) +
+  
+  labs(title = "Top 10 des départements avec le plus de délits", 
+       x = "Département", y = "Nombre total de délits") +#Labels
+  
+  theme_minimal() + #Themes
+  coord_cartesian()
 
 
 
 
-
+#facet_wrap ou facet_grid pour afficher le type de criminalité par département
+#avec d'un côté les départements et de l'autre la criminalité
 
 
