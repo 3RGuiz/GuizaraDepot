@@ -1,0 +1,293 @@
+---
+title: "Souveraineté numérique européenne : enjeux et perspectives"
+author: "CAUBARRERE Guillaume"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  pdf_document:
+    toc: true
+    toc_depth: '3'
+    fig_caption: true
+  html_document:
+    code_folding: hide
+    fig_caption: true
+    number_sections: true
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+bibliography: biblio/BIBLIO1.bib
+csl: biblio/isara-iso-690.csl
+header-includes:
+  - \usepackage{float}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE, fig.pos="H", fig.width=6,fig.height = 4,out.width="0.85\\linewidth", fig.align="center")
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(scales)
+```
+
+```{r logo, echo=FALSE, out.width = '40%', fig.align = "center", fig.cap="Logo de l'Union Européenne"}
+knitr::include_graphics("logo_eu.jpg")
+```
+
+# Introduction
+
+La souveraineté numérique européenne se laisse parfois réduire à une affaire d'informatique, alors qu'elle concerne d'abord la capacité à décider dans un environnement dominé par des infrastructures, des plateformes et des standards souvent contrôlés hors du continent. L'Union européenne s'est affirmée comme puissance normative, avec des textes structurants sur les données et sur les grandes plateformes, mais cette force juridique cohabite avec des dépendances matérielles et industrielles persistantes [@warsmann_rapport_2021; @comission_europeenne_europe_2019]. Une lecture opérationnelle du sujet impose donc une approche concrète, centrée sur les outils, les chaînes de valeur, les usages publics et les effets politiques.
+
+Ce rapport propose une synthèse en quatre temps : un cadrage du contexte, un état des enjeux actuels, une projection des enjeux futurs et une conclusion ouvrant sur des leviers d'action réalistes pour l'Union européenne.
+
+## Objectifs du rapport
+
+Ce rapport vise à :
+
+-   **Analyser les dépendances numériques européennes** en identifiant les infrastructures critiques, les plateformes stratégiques et les segments clés des chaînes de valeur où l'autonomie technologique reste limitée
+-   **Évaluer l'impact concret de ces dépendances** sur les fonctions régaliennes, l'espace public numérique et la capacité de l'Union européenne à maintenir ses exigences de sécurité et de contrôle
+-   **Projeter les enjeux futurs** en matière d'intelligence artificielle, de compétences et de gouvernance démocratique dans un environnement où la persuasion devient plus automatisable
+-   **Identifier des leviers d'action réalistes** permettant à l'Union européenne de renforcer sa souveraineté numérique par des investissements structurants, une consolidation industrielle et une politique de rétention des talents
+
+# Contexte
+
+Élevés au-delà d'un simple rôle de support technique, les outils numériques structurent aujourd'hui un cadre à part entière, porteur d'enjeux politiques, économiques et sociaux propres. Ils organisent l'accès à l'information, conditionnent des choix publics, façonnent des marchés et influencent les modalités du débat démocratique [@comission_europeenne_europe_2019].
+
+L'Union européenne a progressivement construit un arsenal juridique visant à encadrer ces dynamiques. Le RGPD a formalisé une exigence élevée de protection des données personnelles, tandis que le Digital Services Act vise la responsabilité des plateformes et le Digital Markets Act s'attaque aux déséquilibres de pouvoir créés par les positions dominantes [@comission_europeenne_digital_2022; @ministere_de_leconomie_numerique_2024]. Cette stratégie consolide une capacité de régulation, mais elle ne produit pas automatiquement une autonomie technologique. Les dépendances identifiées concernent notamment le cloud, les infrastructures critiques, certains logiciels à usage stratégique et des segments clés des chaînes de valeur numériques [@warsmann_rapport_2021].
+
+On remarque alors comme une tension durable entre la norme et l'outil. Le droit fixe un cadre, mais la maîtrise de l'infrastructure conditionne la marge de manœuvre en situation de contrainte, qu'elle soit économique, sécuritaire ou géopolitique [@chimits_cap_2025].
+
+## Cadre réglementaire européen
+
+```{r reglementation, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Évolution du cadre réglementaire numérique européen"}
+
+reglementations <- data.frame(
+  Texte = c("RGPD", "ePrivacy", "Cybersecurity Act", 
+            "Digital Services Act", "Digital Markets Act", 
+            "Data Governance Act", "AI Act"),
+  Annee = c(2018, 2018, 2019, 2022, 2024, 2022, 2024),
+  Domaine = c("Données", "Données", "Sécurité", 
+              "Plateformes", "Concurrence", "Données", "IA"),
+  Impact = c(9, 6, 7, 8, 8, 6, 9)
+)
+
+ggplot(reglementations, aes(x = Annee, y = Impact, color = Domaine, label = Texte)) +
+  geom_point(size = 4) +
+  geom_text(vjust = -0.8, size = 3, check_overlap = TRUE) +
+  scale_x_continuous(breaks = seq(2018, 2024, 1)) +
+  scale_y_continuous(limits = c(5, 10)) +
+  labs(title = "Principales réglementations numériques européennes",
+       x = "Année d'adoption",
+       y = "Impact stratégique (échelle 1-10)",
+       color = "Domaine") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold"))
+
+```
+
+L'Union européenne a développé un cadre réglementaire progressif couvrant les données personnelles, la sécurité, la concurrence et l'intelligence artificielle. Ces actions illustrent l'intensification récente du travail de législation, avec `r nrow(reglementations)` textes majeurs adoptés entre 2018 et 2024.
+
+# Enjeux actuels
+
+## Dépendances technologiques et contrôle des données
+
+Il faut d'abord aborder les enjeux actuels dans la manière dont les données sont stockées, croisées et analysées. Les dépendances technologiques pèsent sur la capacité à auditer les systèmes, à contrôler les conditions de traitement et à maintenir des exigences de sécurité dans la durée [@warsmann_rapport_2021; @le_henanff_lancement_2026]. Cette difficulté s'avère être renforcée lorsque les solutions reposent sur des écosystèmes extra-européens, avec des asymétries de pouvoir impossibles à compenser uniquement par des obligations juridiques.
+
+```{r cloud_iaas, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Parts de marché du cloud IaaS mondial (2024)"}
+
+cloud_market <- data.frame(
+  Provider = c("Amazon (AWS)", "Microsoft (Azure)", "Google Cloud", 
+               "Alibaba", "Autres"),
+  Part_marche = c(37.7, 23.9, 8.2, 7.9, 22.3),
+  Region = c("USA", "USA", "USA", "Chine", "Divers")
+)
+
+ggplot(cloud_market, aes(x = reorder(Provider, Part_marche), 
+                          y = Part_marche, 
+                          fill = Region)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_manual(values = c("USA" = "#C62828", 
+                                 "Chine" = "#F57C00", 
+                                 "Divers" = "#757575")) +
+  labs(title = "Répartition du marché IaaS mondial en 2024",
+       subtitle = "Source : Gartner (2025) - Marché total : 171,8 Md USD",
+       x = "",
+       y = "Part de marché (%)",
+       fill = "Origine") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 9))
+
+```
+
+Cette analyse révèle une domination structurelle des acteurs américains dans le cloud computing. Les trois premiers acteurs (tous américains) détiennent `r sum(cloud_market$Part_marche[cloud_market$Region == "USA"])`,8% du marché mondial [@gartner_iaas_2025].
+
+## L'espace public numérique sous influence
+
+L'espace public numérique constitue un terrain particulièrement sensible. Les grandes plateformes structurent la visibilité des contenus, influencent les trajectoires de viralité et modèlent, en pratique, une partie des conditions du débat politique. Depuis la reprise de X, des organisations indépendantes ont documenté une exposition accrue à des contenus pro-AfD en Allemagne via des mécanismes de recommandation, y compris auprès d'utilisateurs non explicitement engagés politiquement [@marsh_musk_2025; @destruction_x_2025]. Ce type de constat ne suffit pas à établir une causalité électorale, mais il décrit une réalité mesurable : un acteur privé, extra-européen, dispose d'une capacité technique à infléchir l'écologie informationnelle d'un pays européen à grande échelle.
+
+```{r plateformes, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Utilisateurs des principales plateformes en France (2024)"}
+
+plateformes_france <- data.frame(
+  Plateforme = c("YouTube", "Facebook", "Instagram", "LinkedIn", 
+                 "Snapchat", "TikTok", "X/Twitter"),
+  Utilisateurs_millions = c(39.4, 33.4, 29.9, 29.0, 27.35, 25.4, 17.46),
+  Origine = c("USA", "USA", "USA", "USA", "USA", "Chine", "USA")
+)
+
+ggplot(plateformes_france, aes(x = reorder(Plateforme, Utilisateurs_millions), 
+                                 y = Utilisateurs_millions, 
+                                 fill = Origine)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_manual(values = c("USA" = "#C62828", 
+                                 "Chine" = "#F57C00")) +
+  labs(title = "Utilisateurs actifs mensuels des principales plateformes (FR)",
+       subtitle = "Source : Awitec (2024), Blog du Modérateur (2025), données 2024",
+       x = "",
+       y = "Utilisateurs actifs mensuels (millions)",
+       fill = "Origine") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 9))
+
+```
+
+Les plateformes extra-européennes dominent l'espace numérique français, avec `r sum(plateformes_france$Utilisateurs_millions)` millions d'utilisateurs cumulés (avec duplication possible) [@awitec_reseaux_france_2024; @blogdumoderateur_reseaux_2025].
+
+## Dépendances dans les fonctions régaliennes
+
+Les fonctions régaliennes illustrent une contrainte plus directe encore. Le renouvellement du contrat entre la DGSI et Palantir pour l'exploitation d'outils d'analyse de données fait état d'une dépendance opérationnelle dans un domaine où la marge d'erreur est faible et où les alternatives demandent des années d'investissement, de développement et de maturation [@le_monde_informatique_dgsi_2025; @aissa_souverainete_2025]. En dehors de l'hébergement, le sujet porte aussi sur la dépendance logicielle, l'expertise associée, la capacité d'audit et la maîtrise des évolutions futures des systèmes [@raffray_souverainete_2026]. La souveraineté numérique s'évalue ici sur un critère simple : la possibilité de remplacer un outil critique sans rupture majeure. Or, aujourd'hui, l'Union Européenne est incapable d'assurer sa propre souveraineté numérique et technologique dans l'ensemble.
+
+# Enjeux futurs
+
+## L'intelligence artificielle comme axe stratégique
+
+L'intelligence artificielle constitue un axe stratégique, car elle combine données, puissance de calcul (hardware), compétences rares et capital. La capacité à développer, entraîner et gouverner des systèmes d'IA à grande échelle dépend d'infrastructures matérielles et d'écosystèmes industriels complexes La Commission européenne a annoncé l'initiative InvestAI visant à mobiliser 200 milliards d'euros, avec une logique d'investissement dans des capacités structurantes, dont le calcul à grande échelle [@comission_europeenne_eu_2025]. Cette orientation vise un rattrapage d'infrastructure, condition nécessaire à une autonomie, au mieux partielle, sur les technologies de calcul les plus intensives.
+
+```{r investissements_ia, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Investissements privés en IA par région (2013-2023)"}
+
+investissements_ia <- data.frame(
+  Region = c("États-Unis", "Chine", "Royaume-Uni", "Allemagne", "France"),
+  Investissement_2013_2022_Mds = c(248.9, 95.1, 18.2, 7.0, 6.6),
+  Investissement_2023_Mds = c(67.0, 9.3, 4.5, 3.0, 2.6)
+)
+
+ggplot(investissements_ia, aes(x = reorder(Region, Investissement_2013_2022_Mds), 
+                                 y = Investissement_2013_2022_Mds, 
+                                 fill = Region)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_manual(values = c("États-Unis" = "#1976D2", 
+                                 "Chine" = "#F57C00",
+                                 "Royaume-Uni" = "#757575",
+                                 "Allemagne" = "#757575",
+                                 "France" = "#757575")) +
+  labs(title = "Investissements privés cumulés en IA (2013-2022)",
+       subtitle = "Source : Stanford AI Index Report via BPIFrance (2025)",
+       x = "",
+       y = "Investissements (milliards USD)",
+       fill = "Région") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 9))
+
+```
+
+Sur la période 2013-2022, les États-Unis ont investi `r investissements_ia$Investissement_2013_2022_Mds[investissements_ia$Region == "États-Unis"]` milliards USD dans l'IA, soit plus de 2,5 fois l'investissement chinois et près de 38 fois l'investissement français [@bpifrance_ia_2025].
+
+```{r ia_2025, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Levées de fonds IA startups 2025 (premiers mois)"}
+
+levees_2025 <- data.frame(
+  Pays = c("États-Unis", "Chine", "Royaume-Uni", "France"),
+  Montant_Mds = c(109, 9.3, 4.5, 2.6),
+  Nb_startups = c(49, NA, NA, NA)
+)
+
+ggplot(levees_2025, aes(x = reorder(Pays, Montant_Mds), 
+                         y = Montant_Mds, 
+                         fill = Pays)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_manual(values = c("États-Unis" = "#1976D2", 
+                                 "Chine" = "#F57C00",
+                                 "Royaume-Uni" = "#757575",
+                                 "France" = "#757575")) +
+  labs(title = "Levées de fonds startups IA en 2025",
+       subtitle = "Source : Stanford AI Index 2025 via Dubly Transatlantique (2025)",
+       x = "",
+       y = "Montant levé (milliards USD)",
+       fill = "Pays") +
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 9))
+
+```
+
+En 2025, les startups américaines ont levé `r levees_2025$Montant_Mds[levees_2025$Pays == "États-Unis"]` milliards USD, soit près de 12 fois plus que la Chine et 42 fois plus que la France [@dubly_ia_usa_2025].
+
+## Le facteur humain : compétences et rétention des talents
+
+Le facteur humain reste décisif. L'Europe forme et dispose de nombreux professionnels de l'IA, mais fait face à un enjeu de rétention et d'attractivité des parcours. Les travaux du Parlement européen insistent sur les tensions liées aux compétences et sur l'importance d'un continuum entre formation, employabilité et capacité industrielle [@vesnic-alujevic_what_2025]. Des analyses récentes décrivent également une dynamique de départ de profils expérimentés vers des écosystèmes jugés plus attractifs, notamment en raison de la profondeur des marchés et des opportunités de financement [@howcroft_europe_2026].
+
+## L'enjeu démocratique face à l'automatisation
+
+Enfin, l'enjeu démocratique se projette dans un environnement où la persuasion devient plus automatisable, plus ciblée et plus rapide. Les plateformes, les systèmes de recommandation et les outils de génération de contenus constituent un ensemble technique qui pèse sur la formation des opinions. À l'instar de X, plateforme mise en cause dans la valorisation de l'AfD en Allemagne, les entreprises de la "Big Data" sont toutes en mesure de faire valoir les intérêts personnels de leurs dirigeants et actionnaires au-travers d'ingérences politiques. Peter Thiel, président de Palantir Technologies, a présenté la technologie comme un moyen de "changer unilatéralement le monde sans avoir besoin de constamment convaincre et supplier les gens", ajoutant explicitement que la technologie peut contourner ou dépasser les mécanismes politiques traditionnels plutôt que de s’y conformer. Une souveraineté numérique effective implique donc une capacité à encadrer ces systèmes, à contrôler leur transparence et à soutenir des alternatives crédibles, sans dépendre exclusivement d'acteurs dominants [@chambersign_souverainete_2025].
+
+# Conclusion
+
+La souveraineté numérique européenne se lit à travers des situations concrètes : dépendances aux infrastructures, poids des plateformes dans l'espace public, difficulté à remplacer des outils critiques dans les fonctions régaliennes, et compétition mondiale sur les compétences et l'IA [@warsmann_rapport_2021; @le_monde_informatique_dgsi_2025; @aissa_souverainete_2025; @marsh_musk_2025; @destruction_x_2025].
+
+```{r synthese_investissements, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Comparaison des investissements IA USA-Chine-Europe (2023)"}
+
+comparaison_regions <- data.frame(
+  Region = c("États-Unis", "Chine", "UE + UK", "InvestAI (objectif)"),
+  Montant_Mds_EUR = c(62.5, 7.3, 9, 200),
+  Type = c("2023 réalisé", "2023 réalisé", "2023 réalisé", "Mobilisation prévue")
+)
+
+ggplot(comparaison_regions, aes(x = Region, y = Montant_Mds_EUR, fill = Type)) +
+  geom_bar(stat = "identity") +
+  scale_fill_manual(values = c("2023 réalisé" = "#757575", 
+                                 "Mobilisation prévue" = "#1976D2")) +
+  labs(title = "Investissements IA : situation 2023 et objectif européen",
+       subtitle = "Sources : Stanford AI Index (2025), Commission Européenne (2025)",
+       x = "",
+       y = "Montant (milliards EUR)",
+       fill = "Statut") +
+  theme_minimal() +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, face = "bold"),
+        plot.subtitle = element_text(hjust = 0.5, size = 9))
+
+```
+
+Des leviers d'action se dégagent avec une logique cumulative. L'investissement dans les infrastructures et dans l'IA constitue un premier socle, dont InvestAI fournit une direction et un ordre de grandeur [@comission_europeenne_eu_2025]. On peut trouver un deuxième levier dans la consolidation d'entreprises européennes capables de monter en échelle, avec des marchés publics cohérents, des financements patients et une intégration réelle du marché intérieur [@chimits_cap_2025]. Un troisième levier concerne la formation, au sens large : ingénierie, cybersécurité, cloud, audit, droit du numérique, gestion des risques, capacités de déploiement. Ce troisième levier semble pour le moment inactionnable pour la France. En regard de la situation des fonds et de l'enseignement publics en 2026, si aucune décision stratégique n'est prise pour revaloriser l'éducation à grande échelle, le pays n'a que peu de chances de se mettre au niveau nécessaire pour assurer sa souveraineté numérique.
+
+La rétention des talents se place au centre de cette trajectoire. Un continent qui forme sans offrir des conditions de carrière, d'industrialisation et de financement comparables favorise mécaniquement les écosystèmes extra-européens [@vesnic-alujevic_what_2025; @howcroft_europe_2026]. La souveraineté numérique se construit alors comme une capacité durable à produire, à maintenir et à gouverner des outils critiques, avec des compétences disponibles sur place et des chaînes de valeur suffisamment robustes pour résister aux chocs [@le_henanff_lancement_2026].
+
+# Annexes
+
+## Méthodologie
+
+Les données présentées dans ce rapport proviennent exclusivement de sources vérifiées et datées :
+
+- **Cloud computing** : Gartner (2024-2025), Precedence Research (2025)
+- **Intelligence artificielle** : Stanford AI Index Report (2025), BPIFrance (2025), Dubly Transatlantique (2025), Commission Européenne (2025)
+- **Réseaux sociaux** : We Are Social/Meltwater (2025), Awitec (2024), Blog du Modérateur (2025)
+- **Analyse institutionnelle** : Rapport Warsmann-Latombe (2021), Commission Européenne (2019-2025), Parlement Européen (2025)
+
+## Limites de l'étude
+
+- Les données sur les investissements IA varient selon les sources et les méthodologies de calcul
+- Les chiffres d'utilisateurs des plateformes sont des estimations publicitaires sujettes à un biais
+- La situation évolue rapidement, notamment dans le domaine de l'IA générative
+
+# Références
