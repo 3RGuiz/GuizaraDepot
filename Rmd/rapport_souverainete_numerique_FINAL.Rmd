@@ -58,37 +58,6 @@ L'Union européenne a progressivement construit un arsenal juridique visant à e
 
 On remarque alors comme une tension durable entre la norme et l'outil. Le droit fixe un cadre, mais la maîtrise de l'infrastructure conditionne la marge de manœuvre en situation de contrainte, qu'elle soit économique, sécuritaire ou géopolitique [@chimits_cap_2025].
 
-## Cadre réglementaire européen
-
-```{r reglementation, echo=TRUE, eval=TRUE, fig.align = "center", fig.cap="Évolution du cadre réglementaire numérique européen"}
-
-reglementations <- data.frame(
-  Texte = c("RGPD", "ePrivacy", "Cybersecurity Act", 
-            "Digital Services Act", "Digital Markets Act", 
-            "Data Governance Act", "AI Act"),
-  Annee = c(2018, 2018, 2019, 2022, 2024, 2022, 2024),
-  Domaine = c("Données", "Données", "Sécurité", 
-              "Plateformes", "Concurrence", "Données", "IA"),
-  Impact = c(9, 6, 7, 8, 8, 6, 9)
-)
-
-ggplot(reglementations, aes(x = Annee, y = Impact, color = Domaine, label = Texte)) +
-  geom_point(size = 4) +
-  geom_text(vjust = -0.8, size = 3, check_overlap = TRUE) +
-  scale_x_continuous(breaks = seq(2018, 2024, 1)) +
-  scale_y_continuous(limits = c(5, 10)) +
-  labs(title = "Principales réglementations numériques européennes",
-       x = "Année d'adoption",
-       y = "Impact stratégique (échelle 1-10)",
-       color = "Domaine") +
-  theme_minimal() +
-  theme(legend.position = "bottom",
-        plot.title = element_text(hjust = 0.5, face = "bold"))
-
-```
-
-L'Union européenne a développé un cadre réglementaire progressif couvrant les données personnelles, la sécurité, la concurrence et l'intelligence artificielle. Ces actions illustrent l'intensification récente du travail de législation, avec `r nrow(reglementations)` textes majeurs adoptés entre 2018 et 2024.
-
 # Enjeux actuels
 
 ## Dépendances technologiques et contrôle des données
